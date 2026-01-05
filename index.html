@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Enabled Smart Kitchen Safety System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI-Enabled Smart Kitchen Safety System</h1>
+            <p class="subtitle">Real-time Gas Leak Detection & Prevention</p>
+        </header>
+
+        <main>
+            <div class="demo-banner">
+                <div class="demo-icon">🎯</div>
+                <div class="demo-content">
+                    <h3>Demo Mode</h3>
+                    <p>This is a software simulation. In production, this would connect to physical gas sensors via IoT devices (Arduino/Raspberry Pi) using MQTT or HTTP protocols.</p>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-header">
+                    <h3>System Overview</h3>
+                </div>
+                <p>This AI-powered system monitors gas levels in your kitchen and makes intelligent safety decisions using Google Gemini AI. It automatically shuts off gas supply when critical leaks are detected.</p>
+                <div class="status-row">
+                    <span class="status-label">System Status:</span>
+                    <span class="status-value" id="system-status">Initializing...</span>
+                </div>
+                <div class="demo-controls">
+                    <button id="reset-data-btn" class="demo-btn">🗑️ Reset Demo Data</button>
+                    <button id="demo-help-btn" class="demo-btn">ℹ️ Demo Instructions</button>
+                </div>
+            </div>
+            
+            <div class="decision-section">
+                <h2>System Decision</h2>
+                <div class="decision-card" id="decision-card">
+                    <div class="decision-state" id="decision-state">ANALYZING...</div>
+                    <div class="decision-explanation" id="decision-explanation">Collecting initial data for analysis...</div>
+                    <div class="decision-source" id="decision-source"></div>
+                </div>
+                
+                <div class="gas-supply-section">
+                    <div class="gas-supply-label">Gas Supply:</div>
+                    <div class="gas-supply-status" id="gas-supply-status">
+                        <span class="gas-status-indicator" id="gas-status-indicator"></span>
+                        <span class="gas-status-text" id="gas-status-text">ON</span>
+                    </div>
+                </div>
+                
+                <div class="alert-overlay" id="alert-overlay">
+                    <div class="alert-content">
+                        <div class="alert-icon">🚨</div>
+                        <div class="alert-title">CRITICAL GAS LEAK DETECTED</div>
+                        <div class="alert-message">Gas supply has been automatically shut off</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="event-log-section">
+                <h2>Event Log</h2>
+                <div class="event-log-container" id="event-log-container">
+                    <div class="event-log-empty">No events yet...</div>
+                </div>
+            </div>
+            
+            <div class="alert-history-section">
+                <h2>Alert History</h2>
+                <div class="history-controls">
+                    <button id="refresh-history-btn" class="refresh-btn">🔄 Refresh</button>
+                    <span class="history-count">Loading...</span>
+                </div>
+                <div class="history-table-container">
+                    <table class="history-table" id="history-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Gas Level (ppm)</th>
+                                <th>AI Decision</th>
+                                <th>Action Taken</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <tr>
+                                <td colspan="4" class="history-loading">Loading history...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="controls-section">
+                <div class="section-header">
+                    <h2>Simulation Mode</h2>
+                    <p class="section-subtitle">Test different gas leak scenarios</p>
+                </div>
+                <p class="controls-description">Select a scenario to simulate:</p>
+                <div class="mode-buttons">
+                    <button id="mode-normal" class="mode-btn mode-btn-normal active" data-mode="normal">
+                        <span class="mode-icon">🍳</span>
+                        <span class="mode-label">Normal Cooking</span>
+                    </button>
+                    <button id="mode-minorLeak" class="mode-btn mode-btn-warning" data-mode="minorLeak">
+                        <span class="mode-icon">⚠️</span>
+                        <span class="mode-label">Minor Leak</span>
+                    </button>
+                    <button id="mode-criticalLeak" class="mode-btn mode-btn-danger" data-mode="criticalLeak">
+                        <span class="mode-icon">🚨</span>
+                        <span class="mode-label">Critical Leak</span>
+                    </button>
+                </div>
+                <p class="current-mode">Current Mode: <span id="current-mode-display">Normal Cooking</span></p>
+            </div>
+            
+            <div class="chart-section">
+                <div class="section-header">
+                    <h2>Gas Concentration Monitor</h2>
+                    <p class="section-subtitle">Real-time visualization of gas levels</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="gasChart"></canvas>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="demo-footer">
+            <p>Built for TechSprint by GDG | AI-Enabled Smart Kitchen Safety System</p>
+            <p class="footer-note">Hardware Integration: Replace gasSensorSimulator.js with MQTT/HTTP client connecting to physical sensors</p>
+        </footer>
+    </div>
+    
+    <!-- Demo Instructions Modal -->
+    <div class="modal-overlay" id="demo-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Demo Instructions</h2>
+                <button class="modal-close" id="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="instruction-step">
+                    <h3>1. Start the Demo</h3>
+                    <p>The system automatically starts in "Normal Cooking" mode. Watch the gas concentration chart update in real-time.</p>
+                </div>
+                <div class="instruction-step">
+                    <h3>2. Test Scenarios</h3>
+                    <p>Click the simulation mode buttons to test different scenarios:</p>
+                    <ul>
+                        <li><strong>Normal Cooking:</strong> Safe gas levels (0-50 ppm)</li>
+                        <li><strong>Minor Leak:</strong> Warning levels (50-200 ppm)</li>
+                        <li><strong>Critical Leak:</strong> Dangerous levels (200+ ppm) - triggers automatic gas shutoff</li>
+                    </ul>
+                </div>
+                <div class="instruction-step">
+                    <h3>3. Watch AI Decisions</h3>
+                    <p>The system uses Google Gemini AI to analyze gas patterns and make safety decisions. The decision card shows whether the AI or local logic made the assessment.</p>
+                </div>
+                <div class="instruction-step">
+                    <h3>4. View History</h3>
+                    <p>Check the Alert History table to see past events, decisions, and actions taken by the system.</p>
+                </div>
+                <div class="instruction-step">
+                    <h3>5. Reset Data</h3>
+                    <p>Use the "Reset Demo Data" button to clear all Firebase data and start fresh.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+    <script src="config/firebaseConfig.js"></script>
+    <script src="config/geminiConfig.js"></script>
+    <script src="utils/gasSensorSimulator.js"></script>
+    <script src="utils/chartManager.js"></script>
+    <script src="utils/decisionEngine.js"></script>
+    <script src="utils/actionSimulator.js"></script>
+    <script src="services/firebaseService.js"></script>
+    <script src="services/geminiService.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
+
